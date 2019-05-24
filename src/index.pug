@@ -1,0 +1,85 @@
+html
+  head
+    script(src='https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js')
+    link(href='https://use.fontawesome.com/releases/v5.8.2/css/all.css', rel='stylesheet')
+    link(href='style.css', rel='stylesheet')
+  body
+    #app 
+        h1 {{ gname }}
+
+        .wrapper
+            .into
+                h3 info 
+                .info
+                    label game name 
+                    input(v-model='gname', v-bind:disabled='viewonly')
+                .info
+                    label win points
+                    input(v-model='wpt', v-bind:disabled='viewonly')
+                .info
+                    label loss points
+                    input(v-model='lpt', v-bind:disabled='viewonly')
+                .info
+                    label draw points
+                    input(v-model='dpt', v-bind:disabled='viewonly')
+
+                h3 team names
+                input.teams__name(v-for='(team, tid) in teams',
+                    v-model='teams[tid]', v-bind:key='tid',
+                    v-bind:placeHolder='getName(tid)',
+                    v-bind:disabled='viewonly')
+                button(v-on:click='addTeam()', v-if='!viewonly') add team (will clear data)
+            .games
+                h3 games
+                table.fixture
+                    tr.fixture__header
+                        td game 
+                        td team A 
+                        td team B 
+                        td score A 
+                        td score B 
+                        td winner
+                    tr.fixture__game(v-for='(game, gid) in fixture', v-bind:key='gid')
+                        td.fixture__game--gid {{ gid + 1 }}.
+                        td.fixture__game--team {{ getName(game[0]) }}
+                        td.fixture__game--team {{ getName(game[1]) }}
+                        td.fixture__game--score 
+                            input(v-model='scores[gid][0]', type='number', 
+                                v-bind:disabled='viewonly')
+                        td.fixture__game--score 
+                            input(v-model='scores[gid][1]', type='number',
+                                v-bind:disabled='viewonly')
+                        td.fixture__game--winner
+                            span(v-if='scores[gid][0]==="" || scores[gid][1]===""')
+                            span(v-else)
+                                strong(v-if='scores[gid][0]==scores[gid][1]') DRAW
+                                strong(v-else-if='scores[gid][0]>scores[gid][1]') {{ getName(game[0]) }} 
+                                strong(v-else) {{ getName(game[1]) }} 
+            .league
+                h3 league table
+                table.result
+                    tr.result__header
+                        td team
+                        td win
+                        td draw
+                        td loss
+                        td gf
+                        td ga
+                        td gd
+                        td pt
+                    tr.result__team(v-for='(team, tid) in result', v-bind:key='tid')
+                        td {{ getName(team) }}
+                        td {{ wins[team] }} 
+                        td {{ draws[team] }}
+                        td {{ loss[team] }}
+                        td {{ gf[team] }}
+                        td {{ ga[team] }}
+                        td {{ gf[team] - ga[team] }} 
+                        td {{ pts[team] }}
+        
+        .btns
+            button(onclick='toggleViewOnly()')
+                span(v-if='viewonly') open for editing
+                span(v-else) make view-only 
+
+    script(src='script.js')

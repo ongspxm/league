@@ -1,0 +1,51 @@
+h1{
+    text-align:center;
+}
+
+.wrapper{
+    display:flex;
+    flex-flow:row wrap;
+    justify-content:space-around;
+}
+
+.info{
+    display:flex;
+    flex-flow:column;
+    margin-bottom:1rem;
+}
+
+td{
+    min-width:4rem;
+    padding:0.5rem 1rem;
+} 
+
+.teams{
+    &__name{
+        display:block;
+        margin-bottom:0.5rem;
+    }
+}
+
+.fixture{
+    &__header{
+        font-weight:bold;
+        outline:1px solid #000;
+    }
+
+    &__game--score input{
+        width:4rem;
+        padding:0.5rem;
+    } 
+}
+
+.result{
+    &__header{
+        font-weight:bold;
+        outline:1px solid #000;
+    }
+}
+
+.btns{
+    margin:2rem;
+    text-align:center;
+}
