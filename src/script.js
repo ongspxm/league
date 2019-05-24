@@ -115,20 +115,14 @@ const app = new Vue({
             }
         },
         updateInfo(obj) {
-            alert('update');
-            this.gname = obj.gname;
-            this.teams = obj.teams;
-            this.scores = obj.scores;
-            this.fixture = obj.fixture;
-
-            this.wpt = obj.wpt;
-            this.dpt = obj.dpt;
-            this.lpt = obj.lpt;
+            Object.keys(obj).forEach(key => {
+                this[key] = obj[key];
+            });
         }
     },
     created() {
-        readHash();
-        if (!this.fixture) {
+        this.updateInfo(readHash());
+        if (this.fixture.length === 0) {
             this.genFixture();
         }
 
@@ -141,16 +135,16 @@ function getHashInfo(){
         gname: app.gname,
         teams: app.teams,
         scores: app.scores,
+        result: app.result,
         fixture: app.fixture,
         wpt: app.wpt, dpt: app.dpt, lpt: app.lpt,
     };
 }
 
 function readHash(){
-    if (location.hash.indexOf('?') > -1) {
-        const obj = JSON.parse(atob(location.hash.split('?')[1]));
-        app.updateInfo(obj);
-    }
+    return (location.hash.indexOf('?') > -1)
+        ? JSON.parse(atob(location.hash.split('?')[1]))
+        : {};
 }
 
 function updateHash(){
@@ -165,8 +159,6 @@ function updateHash(){
             location.hash = `${location.hash.split('?')[0]}?${hash}`;
         }
     }
-
-    console.log(location.hash);
 }
 
 function toggleViewOnly() {
