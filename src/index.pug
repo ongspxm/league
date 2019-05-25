@@ -81,5 +81,7 @@ html
             button(onclick='toggleViewOnly()')
                 span(v-if='viewonly') open for editing
                 span(v-else) make view-only 
+            button(onclick='saveOffline()', v-if='!viewonly') save
+            button(onclick='clearOffline()', v-if='!viewonly') clear
 
     script(src='script.js')

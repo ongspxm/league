@@ -1,4 +1,4 @@
-// window.onhashchange = updateHash;
+window.onhashchange = updateHash;
 
 const app = new Vue({
     el: '#app',
@@ -15,12 +15,49 @@ const app = new Vue({
         result: []
     },
     watch: {
-        wpt: updateHash,
-        lpt: updateHash,
-        dpt: updateHash,
         teams: updateHash,
         gname: updateHash,
-        scores() {
+        wpt() { this.recalc(); updateHash; },
+        lpt() { this.recalc(); updateHash; },
+        dpt() { this.recalc(); updateHash; },
+        scores() { this.recalc(); updateHash;  },
+    },
+    methods: {
+        getName(idx) {
+            return this.teams[idx] || `team ${idx}`;
+        },
+        addTeam() {
+            this.teams.push('');
+            this.genFixture();
+            updateHash();
+        },
+        genFixture() {
+            const leng = this.teams.length;
+
+            const scores = [];
+            const fixture = [];
+
+            for (let i=0; i<leng; i++) {
+                for (let j=i+1; j<leng; j++) {
+                    fixture.push([i, j]);
+                    scores.push(['', '']);
+                }
+            }
+
+            this.scores = scores;
+            this.fixture = fixture;
+
+            this.result = [];
+            for(let i=0; i<leng; i++) {
+                this.result.push(i);
+            }
+        },
+        updateInfo(obj) {
+            Object.keys(obj).forEach(key => {
+                this[key] = obj[key];
+            });
+        },
+        recalc() {
             const leng = this.teams.length;
 
             function init() {
@@ -84,42 +121,6 @@ const app = new Vue({
             updateHash();
         }
     },
-    methods: {
-        getName(idx) {
-            return this.teams[idx] || `team ${idx}`;
-        },
-        addTeam() {
-            this.teams.push('');
-            this.genFixture();
-            updateHash();
-        },
-        genFixture() {
-            const leng = this.teams.length;
-
-            const scores = [];
-            const fixture = [];
-
-            for (let i=0; i<leng; i++) {
-                for (let j=i+1; j<leng; j++) {
-                    fixture.push([i, j]);
-                    scores.push(['', '']);
-                }
-            }
-
-            this.scores = scores;
-            this.fixture = fixture;
-
-            this.result = [];
-            for(let i=0; i<leng; i++) {
-                this.result.push(i);
-            }
-        },
-        updateInfo(obj) {
-            Object.keys(obj).forEach(key => {
-                this[key] = obj[key];
-            });
-        }
-    },
     created() {
         this.updateInfo(readHash());
         if (this.fixture.length === 0) {
@@ -141,10 +142,24 @@ function getHashInfo(){
     };
 }
 
+function saveOffline(){
+    localStorage.setItem('data', btoa(JSON.stringify(getHashInfo())));
+}
+
+function clearOffline(){
+    localStorage.setItem('data', '');
+
+    const url = location.href;
+    if (url.indexOf('#')>-1) {
+        location.href = url.split('#')[0];
+    }
+}
+
 function readHash(){
-    return (location.hash.indexOf('?') > -1)
-        ? JSON.parse(atob(location.hash.split('?')[1]))
-        : {};
+    const data = (location.hash.indexOf('?') > -1)
+        ? location.hash.split('?')[1]
+        : localStorage.getItem('data');
+    return JSON.parse(atob(data) || '{}');
 }
 
 function updateHash(){
