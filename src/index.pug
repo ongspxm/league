@@ -30,7 +30,9 @@ html
                     v-bind:disabled='viewonly')
                 button(v-on:click='addTeam()', v-if='!viewonly') add team (will clear data)
             .games
-                h3 games
+                h3 
+                    span games &nbsp;
+                    span(v-if='!isFixture') (cannot form full fixture table)
                 table.fixture
                     tr.fixture__header
                         td game 
@@ -53,7 +55,7 @@ html
                             span(v-if='scores[gid][0]==="" || scores[gid][1]===""')
                             span(v-else)
                                 strong(v-if='scores[gid][0]==scores[gid][1]') DRAW
-                                strong(v-else-if='scores[gid][0]>scores[gid][1]') {{ getName(game[0]) }} 
+                                strong(v-else-if='parseInt(scores[gid][0])>parseInt(scores[gid][1])') {{ getName(game[0]) }} 
                                 strong(v-else) {{ getName(game[1]) }} 
             .league
                 h3 league table

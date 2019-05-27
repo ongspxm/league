@@ -4,6 +4,42 @@ if ('serviceWorker' in navigator) {
 
 window.onhashchange = updateHash;
 
+function valid(last, next) {
+    for (let i=0; i<2; i++) {
+        if (last[i] == next[0] || last[i] == next[1]) {
+            return false;
+        } 
+    }
+
+    return true;
+}
+
+function rmIdx(array, idx) {
+    return array.slice(0,idx).concat(array.slice(idx+1));
+}
+
+function dp(curr, left) {
+    const leng = left.length;
+    if (curr.length===0) {
+        return dp([left[0]], rmIdx(left, 0));
+    }
+    
+    if (left.length===0) {
+        return curr;
+    }
+
+    for (let i=0; i<leng; i++) {
+        if (valid(curr[curr.length-1], left[i])) {
+            const ans = dp(
+                curr.slice().concat([left[i]]),
+                rmIdx(left, i));
+            if (ans) { return ans; }
+        }
+    }
+
+    return null;
+}
+
 const app = new Vue({
     el: '#app',
     data: {
@@ -11,6 +47,7 @@ const app = new Vue({
         viewonly: false,
         gname: 'ABC JC Frisbee League 1',
         teams: ['', ''],
+        isFixture: false,
         fixture: [],
         scores: [],
         wins: [], loss: [], draws: [],
@@ -37,19 +74,21 @@ const app = new Vue({
         },
         genFixture() {
             const leng = this.teams.length;
-
-            const scores = [];
-            const fixture = [];
+            const all = [];
 
             for (let i=0; i<leng; i++) {
                 for (let j=i+1; j<leng; j++) {
-                    fixture.push([i, j]);
-                    scores.push(['', '']);
+                    all.push([i, j]); 
+                    this.scores.push(['', '']);
                 }
             }
 
-            this.scores = scores;
-            this.fixture = fixture;
+            this.isFixture = true;
+            this.fixture = dp([], all);
+            if (!this.fixture) {
+                this.fixture = all;
+                this.isFixture = false;
+            }
 
             this.result = [];
             for(let i=0; i<leng; i++) {
@@ -144,6 +183,7 @@ function getHashInfo(){
         scores: app.scores,
         result: app.result,
         fixture: app.fixture,
+        isFixture: app.isFixture,
         wpt: app.wpt, dpt: app.dpt, lpt: app.lpt,
     };
 }
