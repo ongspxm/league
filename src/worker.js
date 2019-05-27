@@ -1,12 +1,11 @@
 self.addEventListener('install', function(event) {
     event.waitUntil(caches.open('offline').then(function(cache) {
         return cache.addAll([
-            '/',
-            '/vue.js',
-            '/script.js',
-            '/style.css',
-            '/index.html', 
-            '/fawesome.css',
+            'vue.js',
+            'script.js',
+            'style.css',
+            'index.html', 
+            'fawesome.css',
         ]);
     }));
 });
