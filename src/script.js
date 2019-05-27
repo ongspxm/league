@@ -1,3 +1,7 @@
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/worker.js');
+}
+
 window.onhashchange = updateHash;
 
 const app = new Vue({
@@ -51,6 +55,8 @@ const app = new Vue({
             for(let i=0; i<leng; i++) {
                 this.result.push(i);
             }
+
+            this.recalc();
         },
         updateInfo(obj) {
             Object.keys(obj).forEach(key => {
@@ -159,13 +165,12 @@ function readHash(){
     const data = (location.hash.indexOf('?') > -1)
         ? location.hash.split('?')[1]
         : localStorage.getItem('data');
-    return JSON.parse(atob(data) || '{}');
+    return data ? JSON.parse(atob(data)) : {};
 }
 
 function updateHash(){
-    app.viewonly = location.hash.startsWith('#/view');
-
-    if (app.ready) {
+    if (app) {
+        app.viewonly = location.hash.startsWith('#/view');
         const hash = btoa(JSON.stringify(getHashInfo()));
 
         if (location.hash.indexOf('?') === -1) {
