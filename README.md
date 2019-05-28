@@ -2,6 +2,8 @@
 
 **url for application:** [github.io](https://ongspxm.github.io/league/)
 
+![](https://i.imgur.com/tpKK1nr.png)
+
 In a round robin tournament, the league table can be generated using by recording the scores of each game, and then sorted according to the number of goals score and the points scored.
 
 ## features

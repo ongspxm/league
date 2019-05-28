@@ -49,7 +49,7 @@ const app = new Vue({
         teams: ['', ''],
         isFixture: false,
         fixture: [],
-        scores: [],
+        scores: [], played: [],
         wins: [], loss: [], draws: [],
         gf: [], ga:[], gd: [],
         pts: [], wpt: 3, lpt:0, dpt:1,
@@ -93,6 +93,7 @@ const app = new Vue({
             this.result = [];
             for(let i=0; i<leng; i++) {
                 this.result.push(i);
+                this.played.push(0);
             }
 
             this.recalc();
