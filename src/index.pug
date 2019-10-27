@@ -32,7 +32,7 @@ html
             .games
                 h3 
                     span games &nbsp;
-                    span(v-if='!isFixture') (cannot form full fixture table)
+                    span(v-if='!isFixture', style='color:red;') (cannot form full fixture table)
                 table.fixture
                     tr.fixture__header
                         td game 
